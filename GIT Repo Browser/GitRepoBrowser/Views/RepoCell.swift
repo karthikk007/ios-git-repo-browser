@@ -64,7 +64,7 @@ class RepoCell: UITableViewCell {
         descriptionLabel.text = data.description
         
         
-        timeLabel.text = HereDateFormatter.shared.getFormattedString(from: data.updatedAt!)
+        timeLabel.text = "Last Updated: " + HereDateFormatter.shared.getFormattedString(from: data.updatedAt!)
         
         configureBackground(isWiki: data.hasWiki ?? false)
     }
