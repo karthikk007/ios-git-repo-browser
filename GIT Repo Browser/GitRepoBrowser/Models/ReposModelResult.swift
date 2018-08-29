@@ -17,9 +17,12 @@ class ReposModelResult {
     
     var delegate: ReposModelResultDelegate?
     
+    var user: String = "karthikk007"
+    
     func load() {
         let client = ReposModelClient()
-        let endPoint = ModelAPI.repos
+                
+        let endPoint = ModelAPI.repos(user)
         
         client.fetch(from: endPoint) { (result) in
             switch result {

@@ -43,7 +43,7 @@ class MainTableViewController: UITableViewController {
         
         dataSource = MainViewModelFactory.getViewModel(delegate: self)
         eventsDelegate = dataSource as! MainTableViewControllerEventsDelegate
-        dataSource.refreshData()
+        //dataSource.refreshData()
     }
 
     override func viewDidLoad() {
@@ -53,9 +53,33 @@ class MainTableViewController: UITableViewController {
         
         title = "Browser"
         
+        promptForUser()
+        
         setupTableView()
         setupActivityIndicator()
         subscribeForNotifications()
+    }
+    
+    func promptForUser() {
+        let alert = UIAlertController(title: "GIT USER", message: "Enter GIT user name", preferredStyle: UIAlertControllerStyle.alert)
+        
+        alert.addAction(UIAlertAction(title: "Fetch", style: UIAlertActionStyle.default, handler: { action in
+            if let name = alert.textFields?.first?.text {
+                print("Your name: \(name)")
+                
+                if name != "" {
+                    self.dataSource.setUser(user: name)
+                }
+                
+                self.dataSource.refreshData()
+            }
+        }))
+        
+        alert.addTextField(configurationHandler: { textField in
+            textField.placeholder = "karthikk007"
+        })
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -213,7 +237,8 @@ extension MainTableViewController {
         let alert = UIAlertController(title: "Error", message: "Please check your Internet connection", preferredStyle: .alert)
         
         let retryAction = UIAlertAction(title: "Retry", style: .default) { (action) in
-            self.dataSource.refreshData()
+            self.promptForUser()
+            //self.dataSource.refreshData()
         }
         
         alert.addAction(retryAction)

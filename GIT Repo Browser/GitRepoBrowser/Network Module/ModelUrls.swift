@@ -9,7 +9,7 @@
 import Foundation
 
 enum ModelAPI {
-    case repos
+    case repos(String)
     case ownerDetail(String)
 }
 
@@ -17,8 +17,8 @@ extension ModelAPI: EndPoint {
     var base: String {
         
         switch self {
-        case .repos:
-            return "https://api.github.com/users/karthikk007/repos"
+        case .repos(let userName):
+            return "https://api.github.com/users/\(userName)/repos"
         case .ownerDetail(let url):
             return url
         }

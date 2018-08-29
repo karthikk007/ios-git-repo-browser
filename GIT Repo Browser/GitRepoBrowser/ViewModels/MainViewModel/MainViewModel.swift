@@ -10,6 +10,7 @@ import Foundation
 
 protocol MainTableViewControllerDataSource: class {
     func refreshData()
+    func setUser(user: String)
     func numberOfSections() -> Int
     func numberOfRows() -> Int
     func getModel(for indexPath: IndexPath) -> ReposModel?
@@ -95,6 +96,10 @@ fileprivate class MainViewModel {
 extension MainViewModel: MainTableViewControllerDataSource {
     func refreshData() {
         fetchRepos()
+    }
+    
+    func setUser(user: String) {
+        reposResult.user = user
     }
     
     func numberOfSections() -> Int {
