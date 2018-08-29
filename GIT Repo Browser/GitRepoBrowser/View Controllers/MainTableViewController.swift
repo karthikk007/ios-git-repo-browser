@@ -23,6 +23,8 @@ class MainTableViewController: UITableViewController {
     
     var eventsDelegate: MainTableViewControllerEventsDelegate!
     
+    var tapGestureRecognizer : UITapGestureRecognizer!
+    
     lazy var pullToRefreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
 
@@ -51,13 +53,35 @@ class MainTableViewController: UITableViewController {
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort", style: .plain, target: self, action: #selector(sortButtonClicked))
         
-        title = "Browser"
+        title = "Tap to Browse"
         
         promptForUser()
         
         setupTableView()
         setupActivityIndicator()
         subscribeForNotifications()
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tapGestureRecognizer = UITapGestureRecognizer(target:self, action: #selector(self.navBarTapped(_:)))
+        
+        self.navigationController?.navigationBar.addGestureRecognizer(tapGestureRecognizer)
+
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.navigationBar.removeGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    
+    @objc
+    func navBarTapped(_ sender: UITapGestureRecognizer) {
+        promptForUser()
     }
     
     func promptForUser() {
@@ -67,12 +91,15 @@ class MainTableViewController: UITableViewController {
             if let name = alert.textFields?.first?.text {
                 print("Your name: \(name)")
                 
-                if name != "" {
-                    self.dataSource.setUser(user: name)
-                }
+                self.dataSource.setUser(user: name)
                 
                 self.dataSource.refreshData()
+                self.tableView.reloadData()
             }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { action in
+
         }))
         
         alert.addTextField(configurationHandler: { textField in
@@ -109,7 +136,10 @@ class MainTableViewController: UITableViewController {
     
     @objc
     private func applicationWillEnterForeground(_ sender: Any) {
-        dataSource.refreshData()
+//        dataSource.refreshData()
+        if dataSource.numberOfRows() == 0 {
+            promptForUser()
+        }
     }
     
     @objc

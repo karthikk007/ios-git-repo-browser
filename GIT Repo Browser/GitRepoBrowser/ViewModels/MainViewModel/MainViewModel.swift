@@ -56,6 +56,7 @@ fileprivate class MainViewModel {
     
     private func fetchRepos() {
         notifyWillFetch()
+        reposResult.clear()
         reposResult.load()
     }
     
@@ -99,7 +100,7 @@ extension MainViewModel: MainTableViewControllerDataSource {
     }
     
     func setUser(user: String) {
-        reposResult.user = user
+        reposResult.setUser(user: user)
     }
     
     func numberOfSections() -> Int {

@@ -17,7 +17,8 @@ class ReposModelResult {
     
     var delegate: ReposModelResultDelegate?
     
-    var user: String = "karthikk007"
+    let defaultUser: String = "karthikk007"
+    private var user: String!
     
     func load() {
         let client = ReposModelClient()
@@ -35,6 +36,18 @@ class ReposModelResult {
                 print("the error \(error)")
             }
             self.delegate?.loaded()
+        }
+    }
+    
+    func clear() {
+        results?.removeAll()
+    }
+    
+    func setUser(user: String) {
+        if user == "" {
+            self.user = defaultUser
+        } else {
+            self.user = user
         }
     }
 }
